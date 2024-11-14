@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Flavour-Vault / About Us</title>
+    <link rel="stylesheet" href="SignUp.css">
+    <link rel="icon" type="image/jpg" href="The Flavour Vault/Images/Favicon.png">
+
+</head>
+<body>
+    <header>
+        <img src="The Flavour Vault/Images/Favicon.png" alt="A delicious plate of food" width="100" height="100">
+        <h1>Welcome to The Flavour-Vault</h1>
+        <p>Your home for delicious and easy recipes</p>
+    </header>
+
+    <nav>
+        <a href="homepage.html">Home</a>
+        <a href="recipes.html">Recipes</a>
+        <a href="contact.html">Contact</a>
+        <a href="signup.html" class="call-to-action-link">Sign Up</a>
+    </nav>
+    <div class ="container"></div>
+    <main>
+        <h2>Sign In / Sign Up</h2>
+
+        <form id="user-form">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div>
+                <label for="email">Email address</label>
+                <input type="text" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <button type="button" onclick="signUp()">Sign Up</button>
+                <button type="button" onclick="signIn()">Sign In</button>
+            </div>
+        </form>
+    </main>
+</div>
+
+    <footer>
+        &copy; 2024 R&R Recipes. All rights reserved.
+    </footer>
+
+    <script src="signup.js"></script> <!-- Link to your JavaScript file -->
+</body>
+</html>
