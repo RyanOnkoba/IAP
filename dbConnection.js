@@ -1,13 +1,18 @@
 const mysql = require('mysql2');
+const dotenv = require('dotenv');
 
-// Create a connection pool
-const pool = mysql.createPool({
-    host: 'localmySQL',
-    user: 'root',       // Replace with your MySQL username
-    password: '1a2bacadaeE101',   // Replace with your MySQL password
-    database: 'flavourvault',     // Replace with your database name
-    port: 3306                   // Default MySQL port
+dotenv.config(); // Load environment variables from a `.env` file
+
+// Create a MySQL connection pool
+const db = mysql.createPool({
+    host: process.env.DB_HOST || '127.0.0.1',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '1a2bacadaeE@101',
+    database: process.env.DB_NAME || 'recipes',
+    port: process.env.DB_PORT || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
 });
 
-// Export the pool for use in your application
-module.exports = pool.promise();
+module.exports = db; // Export the connection pool

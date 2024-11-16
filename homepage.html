@@ -86,49 +86,5 @@
     <!-- JavaScript files should be loaded at the end of the body -->
     <script src="homepage.js"></script>
     <script src="app.js"></script>
-    <script>
-        // Fetch and display recipes when the page loads
-        document.addEventListener('DOMContentLoaded', fetchRecipes);
-
-        // Function to fetch recipes from the server
-        function fetchRecipes() {
-            fetch('/recipes')
-                .then(response => response.json())
-                .then(recipes => {
-                    displayRecipes(recipes);
-                })
-                .catch(error => {
-                    console.error('Error fetching recipes:', error);
-                });
-        }
-
-        // Function to display recipes
-        function displayRecipes(recipes) {
-            const recipesContainer = document.getElementById('recipes-container');
-            recipesContainer.innerHTML = ''; // Clear the container before adding new recipes
-
-            recipes.forEach(recipe => {
-                const recipeCard = document.createElement('div');
-                recipeCard.classList.add('recipe-card');
-
-                recipeCard.innerHTML = `
-                    <img src="The Flavour Vault/Images/Food.jpeg" alt="${recipe.title}" width="250" height="150">
-                    <h3>${recipe.title}</h3>
-                    <p>${recipe.description}</p>
-                    <p>Rating: ${recipe.recipe_rating || 'Not rated yet'}</p>
-                    <div class="star-rating">
-                        <span data-value="5" class="star">&#9733;</span>
-                        <span data-value="4" class="star">&#9733;</span>
-                        <span data-value="3" class="star">&#9733;</span>
-                        <span data-value="2" class="star">&#9733;</span>
-                        <span data-value="1" class="star">&#9733;</span>
-                    </div>
-                    <div id="rating-value"></div>
-                `;
-
-                recipesContainer.appendChild(recipeCard); // Add the card to the container
-            });
-        }
-    </script>
 </body>
 </html>
