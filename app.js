@@ -1,11 +1,28 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const db = require('./dbConnection'); // Import the database connection
-
+const mysql = require('mysql2');
+const app = express();
+const path = require('path');
 dotenv.config(); // Load environment variables from a `.env` file
 
-const app = express();
+// Database connection using mysql2
+const db = mysql.createConnection({
+    host: 'localhost',    // Your database host
+    user: 'root',         // Your database username
+    password: '1a2bacadae@E101',         // Your database password
+    database: 'recipes' // Your database name
+});
+
+// Test the database connection
+db.connect(err => {
+    if (err) {
+        console.error('Error connecting to the database:', err.message);
+        return;
+    }
+    console.log('Connected to the database');
+});
+
 const PORT = process.env.PORT || 3001;
 
 // Middleware
@@ -13,50 +30,52 @@ app.use(cors()); // Enable CORS for cross-origin requests
 app.use(express.json()); // Parse incoming JSON payloads
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded payloads
 
-// Example query to ensure the database connection works
-db.query('SELECT 1 + 1 AS solution', (err, results) => {
-    if (err) {
-        console.error('Error executing query:', err.message);
-    } else {
-        console.log('Database connection test successful. Solution:', results[0].solution);
-    }
+// Serve static files directly from the root directory (without the 'public' folder)
+app.use(express.static(path.join(__dirname)));
+
+// Route to serve the homepage
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'homepage.html')); // No 'public' part
 });
 
-// Define a route to add a new recipe
+// Adding a recipe
 app.post('/add-recipe', (req, res) => {
     const { name, ingredients, instructions } = req.body;
 
-    // Validate inputs
     if (!name || !ingredients || !instructions) {
         return res.status(400).json({ message: 'Name, ingredients, and instructions are required.' });
     }
 
-    // Insert recipe into the database
     const query = 'INSERT INTO recipes (name, ingredients, instructions) VALUES (?, ?, ?)';
     db.query(query, [name, ingredients, instructions], (err, results) => {
         if (err) {
             console.error('Error adding recipe:', err.message);
-            return res.status(500).json({ message: 'Error adding recipe: ' + err.message });
+            return res.status(500).json({ message: 'Error adding recipe' });
         }
         res.status(201).json({ message: 'Recipe added successfully', recipeId: results.insertId });
     });
 });
 
-// Define a route to fetch all recipes
+// Fetching all recipes
 app.get('/recipes', (req, res) => {
     const query = 'SELECT * FROM recipes';
     db.query(query, (err, results) => {
         if (err) {
             console.error('Error fetching recipes:', err.message);
-            return res.status(500).json({ message: 'Error fetching recipes: ' + err.message });
+            return res.status(500).json({ message: 'Error fetching recipes' });
         }
         res.status(200).json(results);
     });
 });
 
-// Handle invalid routes
-app.use((req, res) => {
-    res.status(404).json({ message: 'Route not found' });
+// Search route
+app.get('/search', (req, res) => {
+    const query = req.query.q.toLowerCase();
+    const filteredRecipes = recipes.filter(recipe =>
+        recipe.name.toLowerCase().includes(query) ||
+        recipe.description.toLowerCase().includes(query)
+    );
+    res.json(filteredRecipes);
 });
 
 // Start the server
